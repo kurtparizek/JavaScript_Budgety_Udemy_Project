@@ -35,12 +35,30 @@ var UIController = (function() {
 // GLOBAL APP CONTROLLER
 var controller = (function(budgetCtrl, UICtrl) {
     
-    var DOM = UICtrl.getDOMstrings();
+    var setupEventListeners = function() {
+        var DOM = UICtrl.getDOMstrings();
+        
+        // Action to be taken once the add button (checkmark) is clicked or 
+        document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+    
+        // Add Event Listener to the global object (browser window) so that we can dictate what happens when the user presses a key
+        document.addEventListener('keypress', function(event) {
+        //console.log(event);
+        
+        // if the user presses enter (some browsers don't use keyCode, so which helps cover those browsers as well)
+        if (event.keyCode === 13) {
+            if (event.keyCode === 13 || event.which === 13) {
+                  ctrlAddItem();
+            }
+        } 
+    })
+        
+    }
     
     var ctrlAddItem = function() {
         // 1. Get the field input data
         var input = UICtrl.getInput();
-        console.log(input);
+        // console.log(input);
         
         // 2. Add the item to the budget controller 
         
@@ -52,19 +70,14 @@ var controller = (function(budgetCtrl, UICtrl) {
         
     }
     
- // Action to be taken once the add button (checkmark) is clicked or 
-    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
-    
-    // Add Event Listener to the global object (browser window) so that we can dictate what happens when the user presses a key
-    document.addEventListener('keypress', function(event) {
-        //console.log(event);
-        
-        // if the user presses enter (some browsers don't use keyCode, so which helps cover those browsers as well)
-        if (event.keyCode === 13) {
-            if (event.keyCode === 13 || event.which === 13) {
-                  ctrlAddItem();
-            }
-        } 
-    })
+    return {
+        init: function() {
+            console.log('Application has started')
+            setupEventListeners();
+        }
+    }
     
 })(budgetController,UIController);
+
+// Event listeners
+controller.init();
